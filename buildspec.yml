@@ -19,5 +19,5 @@ phases:
       - docker build -t test-app:latest .
   post_build:
     commands:
-      - docker tag test-app:latest 596276697440.dkr.ecr.us-west-2.amazonaws.com/test-app:latest
-      - docker push 596276697440.dkr.ecr.us-west-2.amazonaws.com/test-app:latest
+      - docker tag test-app:latest 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:latest
+      - docker push 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:latest
