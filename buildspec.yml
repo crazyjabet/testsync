@@ -18,5 +18,6 @@ phases:
       - docker build -t test-app:latest .
   post_build:
     commands:
+      - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 758210838432.dkr.ecr.us-west-2.amazonaws.com
       - docker tag test-app:latest 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:latest
       - docker push 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:latest
