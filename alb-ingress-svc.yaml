@@ -1,0 +1,37 @@
+# for EKS ALB need to do the following
+# 1. create IAM OIDC provider for your cluster
+# https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html
+# 2. install AWSLoad Balancer on your cluster
+# https://docs.aws.amazon.com/zh_tw/eks/latest/userguide/aws-load-balancer-controller.html#lbc-install-controller
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-alb-testapp
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 8080}]' #{"HTTPS":443} if 443 will need certificate or else there will be an error with no listeners
+    # no need subnet, use public or private tag in subnet
+#    alb.ingress.kubernetes.io/subnets: subnet-008bb00aee58757ba, subnet-05fbb93ad47d947bc, subnet-001d5bb7accb5123a
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: testapp-svc
+              servicePort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: testapp-svc
+spec:
+  selector:
+    app: testapp
+  type: NodePort # this is needed for alb traffic to pod
+  ports:
+    - port: 8080
+      targetPort: 8080

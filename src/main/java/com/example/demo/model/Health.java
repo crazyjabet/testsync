@@ -1,10 +1,8 @@
 package com.example.demo.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class Health {
 
     private String healthCheckPass = "healthCheckPass";
