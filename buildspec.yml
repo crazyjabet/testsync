@@ -10,23 +10,22 @@ phases:
       - chmod +x ./kubectl
       - mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
       - echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
-      - source ~/.bashrc
+      - kubectl version --short --client
+#      - aws eks --region us-west-2 update-kubeconfig --name test-eks
   pre_build:
     commands:
       - mvn package
   build:
     commands:
       - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 758210838432.dkr.ecr.us-west-2.amazonaws.com
-      - docker build -t test-app:v1 .
+      - docker build -t test-app:$CODEBUILD_BUILD_ID .
   post_build:
     commands:
       - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 758210838432.dkr.ecr.us-west-2.amazonaws.com
-      - docker tag test-app:v1 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v1
-      - docker push 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v1
-      - echo Entered the build phase...
-      - echo Change directory to secondary source
-      - cd $CODEBUILD_SRC_DIR
-      - echo List directory
+      - docker tag test-app:$CODEBUILD_BUILD_ID 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:$CODEBUILD_BUILD_ID
+      - docker push 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:$CODEBUILD_BUILD_ID
+
+#      - cd $CODEBUILD_SRC_DIR
+#      - echo List directory
       - ls -la
-      - echo Push the latest image to cluster
-      - kubectl apply -f deployment.yaml
+#      - kubectl apply -f deployment.yaml
