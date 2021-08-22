@@ -1,16 +1,18 @@
 version: 0.2
+run-as: root
 
 phases:
   install:
     runtime-versions:
       java: openjdk8
     commands:
-      - echo Installing app dependencies...
-      - curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.15.10/2020-02-22/bin/linux/amd64/kubectl
-      - chmod +x ./kubectl
-      - mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
-      - echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
-      - kubectl version --short --client
+#======= install kubectl for deploy to EKS =======
+#      - echo Installing app dependencies...
+#      - curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.15.10/2020-02-22/bin/linux/amd64/kubectl
+#      - chmod +x ./kubectl
+#      - mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+#      - echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
+#      - kubectl version --short --client
 #      - aws eks --region us-west-2 update-kubeconfig --name test-eks
   pre_build:
     commands:
@@ -18,14 +20,18 @@ phases:
   build:
     commands:
       - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 758210838432.dkr.ecr.us-west-2.amazonaws.com
-      - docker build -t test-app:v2 .
+      - docker build -t test-app:v5 .
   post_build:
     commands:
       - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 758210838432.dkr.ecr.us-west-2.amazonaws.com
-      - docker tag test-app:v2 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v2
-      - docker push 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v2
-
+      - docker tag test-app:v5 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v5
+      - docker push 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v5
 #      - cd $CODEBUILD_SRC_DIR
 #      - echo List directory
-      - ls -la
+#      - ls -la
 #      - kubectl apply -f deployment.yaml
+      - # ======== for fargate json file ========
+      - echo Writing image definitions file...
+      - printf '[{"name":"%s","imageUri":"%s"}]' 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v5 > imagedefinitions.json
+artifacts: # for fargate json file
+  files: imagedefinitions.json

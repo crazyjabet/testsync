@@ -1,0 +1,48 @@
+version: 0.0
+resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+      Properties:
+        TaskDefinition: <TASK_DEFINITION>
+        LoadBalancerInfo:
+          ContainerName: "test"
+          ContainerPort: 8080
+#version: 0.0
+#Resources:
+#  - TargetService:
+#      Type: AWS::ECS::Service
+#      Properties:
+#        TaskDefinition: <TASK_DEFINITION>
+#        LoadBalancerInfo:
+#          ContainerName: "SampleApplicationName"
+#          ContainerPort: 80
+#        # Optional properties
+#        PlatformVersion: "LATEST"
+#        NetworkConfiguration:
+#          AwsvpcConfiguration:
+#            Subnets: ["subnet-1234abcd","subnet-5678abcd"]
+#            SecurityGroups: ["sg-12345678"]
+#            AssignPublicIp: "ENABLED"
+#Hooks:
+#  - BeforeInstall: "LambdaFunctionToValidateBeforeInstall"
+#  - AfterInstall: "LambdaFunctionToValidateAfterTraffic"
+#  - AfterAllowTestTraffic: "LambdaFunctionToValidateAfterTestTrafficStarts"
+#  - BeforeAllowTraffic: "LambdaFunctionToValidateBeforeAllowingProductionTraffic"
+#  - AfterAllowTraffic: "LambdaFunctionToValidateAfterAllowingProductionTraffic"
+#
+#
+##version: 0.0
+##Resources:
+##  - TargetService:
+##      Type: AWS::ECS::Service
+##      Properties:
+##        TaskDefinition: "$TASK_DEFINITION"
+##        LoadBalancerInfo:
+##          ContainerName: "$CONTAINER_NAME"
+##          ContainerPort: "80"
+##        PlatformVersion: "LATEST"
+##        NetworkConfiguration:
+##          AwsvpcConfiguration:
+##            Subnets: ["$SUBNET_1","$SUBNET_2","$SUBNET_3"]
+##            SecurityGroups: ["$SECURITY_GROUP"]
+##            AssignPublicIp: "ENABLED"
