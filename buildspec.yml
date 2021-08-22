@@ -32,6 +32,6 @@ phases:
 #      - kubectl apply -f deployment.yaml
       - # ======== for fargate json file ========
       - echo Writing image definitions file...
-      - printf '[{"name":"%s","imageUri":"%s"}]' 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v5 > imagedefinitions.json
+      - printf '[{"name":"%s","imageUri":"%s"}]' test 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v5 > imagedefinitions.json
 artifacts: # for fargate json file
   files: imagedefinitions.json
