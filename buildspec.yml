@@ -33,10 +33,12 @@ phases:
       - # ======== for fargate json file ========
       - echo Writing image definitions file...
       # for standard
-#      - printf '[{"name":"%s","imageUri":"%s"}]' test 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v6 > imagedefinitions.json
+      - printf '[{"name":"%s","imageUri":"%s"}]' test 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v6 > imagedefinitions.json
       # for blue-green
       - printf '{"ImageURI":"%s"}' 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v6 > imageDetail.json
-artifacts: # for fargate json file 
+artifacts: # for fargate json file
   files:
-#    - imagedefinitions.json
+    - imagedefinitions.json
     - imageDetail.json
+    - taskdef.json
+    - appspec.yaml
