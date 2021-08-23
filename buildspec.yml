@@ -20,22 +20,23 @@ phases:
   build:
     commands:
       - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 758210838432.dkr.ecr.us-west-2.amazonaws.com
-      - docker build -t test-app:v5 .
+      - docker build -t test-app:v6 .
   post_build:
     commands:
       - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 758210838432.dkr.ecr.us-west-2.amazonaws.com
-      - docker tag test-app:v5 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v5
-      - docker push 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v5
+      - docker tag test-app:v6 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v6
+      - docker push 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v6
 #      - cd $CODEBUILD_SRC_DIR
 #      - echo List directory
 #      - ls -la
 #      - kubectl apply -f deployment.yaml
       - # ======== for fargate json file ========
       - echo Writing image definitions file...
-      # for standard 
-      - printf '[{"name":"%s","imageUri":"%s"}]' test 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v5 > imagedefinitions.json
+      # for standard
+#      - printf '[{"name":"%s","imageUri":"%s"}]' test 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v6 > imagedefinitions.json
       # for blue-green
-#      - printf '{"ImageURI":"%s"}' 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v5 > imageDetail.json
+      - printf '{"ImageURI":"%s"}' 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v6 > imageDetail.json
 artifacts: # for fargate json file
   files:
-    - imagedefinitions.json
+#    - imagedefinitions.json
+    - imageDetail.json

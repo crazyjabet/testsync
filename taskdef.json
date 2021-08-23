@@ -19,7 +19,7 @@
         }
       ],
       "cpu": 256,
-      "image": "<IMAGE1_NAME>",
+      "image": "<IMAGE_NAME>",
       "name": "test"
     }
   ],
