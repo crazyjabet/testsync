@@ -36,7 +36,7 @@ phases:
 #      - printf '[{"name":"%s","imageUri":"%s"}]' test 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v6 > imagedefinitions.json
       # for blue-green
       - printf '{"ImageURI":"%s"}' 758210838432.dkr.ecr.us-west-2.amazonaws.com/test-app:v6 > imageDetail.json
-artifacts: # for fargate json file
+artifacts: # for fargate json file 
   files:
 #    - imagedefinitions.json
     - imageDetail.json
