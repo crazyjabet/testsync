@@ -1,26 +1,45 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Health;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.demo.dataModel.Health;
+import com.example.demo.entityModel.MemberAccountJPA;
+import com.example.demo.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Slf4j
 @RestController
+//@RequestMapping(value = "/hello")
 public class HelloController {
+
+    @Autowired
+    MemberService memberService;
 
     @GetMapping("/health")
     public String greeting() {
         log.info("hello");
         System.err.println("====== Error hello ======");
         return new Health().getHealthCheckPass();
+    }
+
+    @GetMapping("/add")
+    public String add(){
+        return String.valueOf(memberService.addMember());
+    }
+
+    @GetMapping("/dbtest")
+    public String getDbData() {
+        List<MemberAccountJPA> allMembers = memberService.getAllMembers();
+        log.info("memberService.getAllMembers() length=>" + allMembers.size());
+        log.info("===== address ====>" + allMembers.get(0).getAddress());
+        return allMembers.toString();
     }
 
     @GetMapping("/priv")
