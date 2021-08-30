@@ -31,7 +31,7 @@ run-as: root
 env:
   variables:
     IMAGE_REPO_NAME: test-app
-    $AWS_ACCOUNT_ID: 758210838432
+    AWS_ACCOUNT_ID: 758210838432
 phases:
   install:
     runtime-versions:
@@ -50,16 +50,17 @@ phases:
       - mvn -Dmaven.test.skip package
   build:
     commands:
+      - echo "aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com"
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-      - docker build -t $IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER .
       - echo "$IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER"
+      - docker build -t $IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER .
   post_build:
     commands:
 #      - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ECR_REPO
-      - docker tag $IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER
       - echo "docker tag $IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER"
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER
+      - docker tag $IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER
       - echo "docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER"
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER
 #      - cd $CODEBUILD_SRC_DIR
 #      - echo List directory
 #      - ls -la
