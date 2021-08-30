@@ -31,7 +31,7 @@ run-as: root
 env:
   variables:
     IMAGE_REPO_NAME: test-app
-
+    $AWS_ACCOUNT_ID: 758210838432
 phases:
   install:
     runtime-versions:
@@ -50,7 +50,7 @@ phases:
       - mvn -Dmaven.test.skip package
   build:
     commands:
-#      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       - docker build -t $IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER .
       - echo "$IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER"
   post_build:
