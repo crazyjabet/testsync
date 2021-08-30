@@ -45,32 +45,32 @@ phases:
 #      - echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
 #      - kubectl version --short --client
 #      - aws eks --region us-west-2 update-kubeconfig --name test-eks
-#  pre_build:
-#    commands:
-#      - mvn package
+  pre_build:
+    commands:
+      - mvn package
   build:
     commands:
 #      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
 #      - docker build -t $IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER .
       - echo "$IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER"
-#  post_build:
-#    commands:
-##      - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ECR_REPO
-#      - docker tag $IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER
-#      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER
-##      - cd $CODEBUILD_SRC_DIR
-##      - echo List directory
-##      - ls -la
-##      - kubectl apply -f deployment.yaml
-#      - # ======== for CD fargate json file ========
-#      - echo Writing image definitions file...
-#      # for standard
-#      - printf '[{"name":"%s","imageUri":"%s"}]' $IMAGE_REPO_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER > imagedefinitions.json
-#      # for blue-green
-##      - printf '{"ImageURI":"%s"}' $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER > imageDetail.json
-#artifacts: # for fargate json file
-#  files:
-#    - imagedefinitions.json
-##    - imageDetail.json
-#    - taskdef.json
-#    - appspec.yaml
+  post_build:
+    commands:
+#      - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ECR_REPO
+      - docker tag $IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER
+#      - cd $CODEBUILD_SRC_DIR
+#      - echo List directory
+#      - ls -la
+#      - kubectl apply -f deployment.yaml
+      - # ======== for CD fargate json file ========
+      - echo Writing image definitions file...
+      # ========> for standard
+      - printf '[{"name":"%s","imageUri":"%s"}]' $IMAGE_REPO_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER > imagedefinitions.json
+      # ========> for blue-green
+#      - printf '{"ImageURI":"%s"}' $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_BUILD_NUMBER > imageDetail.json
+artifacts: # for fargate json file
+  files:
+    - imagedefinitions.json
+#    - imageDetail.json
+    - taskdef.json
+    - appspec.yaml
